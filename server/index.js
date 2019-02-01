@@ -1,18 +1,39 @@
+//server
 const express = require("express");
-const bodyParser = require("body-parser");
-const request = require("request");
-
 const app = express();
+const bodyParser = require("body-parser");
+const db = require("../database/index.js");
+//const path = require("path");
 
-//Parse json and x-ww-form-urlencoded
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+//app.use(express.static(path.join(__dirname, "../dist")));
+app.use(express.static(__dirname + "/../dist"));
 
-app.use("/", express.static("dist"));
-
-app.get("/api", (req, res) => {
-  console.log("successful request!");
-  res.send("Hi there");
+app.post("/todos", (req, res) => {
+  console.log(req.body, "<----req.body in post");
+  let val = req.body.payload;
+  let str = `INSERT INTO todos (todo) VALUES ('${val}')`;
+  db.query(str, (err, results) => {
+    if (err) {
+      res.send("error in db insertion");
+    } else {
+      res.send("AWWW YEET ITS IN THERE");
+    }
+  });
 });
 
-app.listen(3000, () => console.log("Now listening on port 3000!"));
+app.get("/todos", (req, res) => {
+  let str = `SELECT todo FROM todos`;
+  db.query(str, (err, todos) => {
+    if (err) {
+      res.send(err, "error in DB retrieval");
+    } else {
+      console.log("successful retrieval");
+      res.send(todos);
+    }
+  });
+});
+
+app.listen(3030, () => {
+  console.log("Server has started and is listening at port 3030");
+});
