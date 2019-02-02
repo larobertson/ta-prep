@@ -26,6 +26,8 @@ class App extends React.Component {
 
   componentDidMount() {
     this.helperGet();
+    
+    //send data somewhere else
   }
 
 
