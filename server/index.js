@@ -2,7 +2,8 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
-const db = require("../database/index.js");
+// const db = require("../database/index.js");
+const utility = require('./utility')
 //const path = require("path");
 
 app.use(bodyParser.json());
@@ -10,28 +11,24 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + "/../dist"));
 
 app.post("/todos", (req, res) => {
-  console.log(req.body, "<----req.body in post");
-  let val = req.body.payload;
-  let str = `INSERT INTO todos (todo) VALUES ('${val}')`;
-  db.query(str, (err, results) => {
-    if (err) {
-      res.send("error in db insertion");
+  let todos = req.body.payload;
+  utility.postTodos(todos, (err, data) => {
+    if(err){ 
+      console.log('error in app.post', err);
     } else {
-      res.send("AWWW YEET ITS IN THERE");
+      res.send('Post successful!');
     }
-  });
+  })
 });
 
 app.get("/todos", (req, res) => {
-  let str = `SELECT todo FROM todos`;
-  db.query(str, (err, todos) => {
-    if (err) {
-      res.send(err, "error in DB retrieval");
+  utility.getTodos((err, todos) => {
+    if(err){
+      console.log('err in app.get', err);
     } else {
-      console.log("successful retrieval");
       res.send(todos);
-    }
-  });
+    } 
+  })
 });
 
 app.listen(3030, () => {

@@ -11,7 +11,8 @@ class App extends React.Component {
       formValue: ""
     };
   }
-  componentDidMount() {
+
+  helperGet() {
     let url = "/todos";
     Axios.get(url).then(response => {
       console.log(response.data, "<--WTF IS THIS?!");
@@ -22,6 +23,12 @@ class App extends React.Component {
       });
     });
   }
+
+  componentDidMount() {
+    this.helperGet();
+  }
+
+
   handlePost(e) {
     e.preventDefault();
     console.log(this);
@@ -31,6 +38,7 @@ class App extends React.Component {
     Axios.post(url, { payload })
       .then(results => {
         console.log("successful post request");
+        this.helperGet();
       })
       .catch(err => {
         alert(err);

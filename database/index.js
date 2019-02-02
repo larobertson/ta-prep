@@ -2,7 +2,7 @@ const db = require("mysql");
 let connection = db.createConnection({
   database: "toDoList",
   user: "root",
-  password: ""
+  password: "test"
 });
 connection.connect((err, res) => {
   if (err) {
